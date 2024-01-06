@@ -14,11 +14,18 @@ export default function CartContextProvider({ children }) {
   let [requestTimeOut, setRequestTimeOut] = useState();
   let [cartId, setCartId] = useState("");
   let [selectedProductId, setSelectedProductId] = useState('')
+  let [waitToDelete, setWaitToDelete] = useState(false)
+  let [waitToChangeCount,setWaitToChangeCount] = useState(false)
+  let [sign, setSign] = useState('')
+  let [waitToAdd, setWaitToAdd] = useState(false)
+  let [productToAdd, setProductToAdd] = useState('')
   
  
 
   async function removeCartItem(productId) {
-    setIsLoading(true);
+    setWaitToDelete(true);
+    try{
+      setSelectedProductId(productId)
     let { data } = await axios.delete(
       "https://ecommerce.routemisr.com/api/v1/cart/" + productId,
       {
@@ -27,11 +34,20 @@ export default function CartContextProvider({ children }) {
         },
       }
     );
-    setIsLoading(false);
+    toast.success('Product removed from cart', {
+      duration: 1000,
+    });
+    setWaitToDelete(false);
     setNumOfCarts(data.numOfCartItems);
     setTotalCartPrice(data.data.totalCartPrice);
-    debugger;
     setCartProducts(data.data.products);
+    setSelectedProductId('')
+    } catch(err){
+      toast.error(err.response.data.message,{duration:1000})
+    }
+
+    setWaitToDelete(false)
+    
   }
   async function getUserCart() {
     setIsLoading(true);
@@ -43,11 +59,11 @@ export default function CartContextProvider({ children }) {
       });
   
       setIsLoading(false);
-      setCartId(res.data.data.id);
+      setCartId(res.data.data._id);
+      
       setNumOfCarts(res.data.numOfCartItems);
       setTotalCartPrice(res.data.data.totalCartPrice);
       setCartProducts(res.data.data.products);
-      console.log(res)
     } catch (err) {
       setError(true);
     }
@@ -55,31 +71,46 @@ export default function CartContextProvider({ children }) {
 
   async function addProductToCart(productId) {
     setIsLoading(true)
-    setSelectedProductId(productId)
-    let { data } = await axios.post(
-      "https://ecommerce.routemisr.com/api/v1/cart",
-      { productId },
-      {
-        headers: {
-          token: localStorage.getItem("token"),
-        },
+    setWaitToAdd(true)
+    try {
+      setSelectedProductId(productId)
+      setWaitToAdd(true)
+      setProductToAdd(productId)
+      let { data } = await axios.post(
+        "https://ecommerce.routemisr.com/api/v1/cart",
+        { productId },
+        {
+          headers: {
+            token: localStorage.getItem("token"),
+          },
+        }
+      );
+      if (data.status === "success") {
+       
+        toast.success(data.message, {
+          duration: 1000,
+        });
+        setNumOfCarts(data.data.products.length);
+      } else {
+        toast.error(data.message, {
+          duration: 1000,
+        });
       }
-    );
-    console.log(data);
-    if (data.status == "success") {
-     
-      toast.success(data.message, {
-        duration: 1000,
-      });
-      setNumOfCarts(data.data.products.length);
-    } else {
-      toast.error(data.message, {
-        duration: 1000,
-      });
+      setIsLoading(false);
+      setSelectedProductId('')
+      setWaitToAdd(false)
+      setProductToAdd('')
+      
+    } catch(err){
+      toast.error(err.response.data.message,{duration:1000})
+      setWaitToAdd(false)
+      setIsLoading(false)
+      setSelectedProductId('')
     }
-    setIsLoading(false);
-    setSelectedProductId('')
+    setWaitToAdd(false)
+    setIsLoading(false)
     
+   
   }
 
   async function clearCart() {
@@ -97,32 +128,47 @@ export default function CartContextProvider({ children }) {
     );
   }
 
-  async function updateProductCount(productId, count, index) {
-    let newCartProducts = [...cartProducts];
-    newCartProducts[index]["count"] = count;
-    setCartProducts(newCartProducts);
-    clearTimeout(requestTimeOut);
-    setRequestTimeOut(
-      setTimeout(async () => {
-        let res = await axios.put(
-          "https://ecommerce.routemisr.com/api/v1/cart/" + productId,
-          {
-            count,
-          },
-          {
-            headers: {
-              token: localStorage.getItem("token"),
-            },
-          }
-        );
-        setNumOfCarts(res.data.numOfCartItems);
-        setTotalCartPrice(res.data.data.totalCartPrice);
-        setCartProducts(res.data.data.products);
+  async function updateProductCount(productId, count, index,sign) {
+    setWaitToChangeCount(true)
 
-        console.log(res);
-      }, 500)
-    );
+    try {
+      setSign(sign)
+      setSelectedProductId(productId)
+      let newCartProducts = [...cartProducts];
+      newCartProducts[index]["count"] = count;
+      setCartProducts(newCartProducts);
+        
+          let res = await axios.put(
+            "https://ecommerce.routemisr.com/api/v1/cart/" + productId,
+            {
+              count,
+            },
+            {
+              headers: {
+                token: localStorage.getItem("token"),
+              },
+            }
+          );
+          setNumOfCarts(res.data.numOfCartItems);
+          setTotalCartPrice(res.data.data.totalCartPrice);
+          setCartProducts(res.data.data.products);
+  
+          console.log(selectedProductId)  
+        
+        
+      
+      
+      setWaitToChangeCount(false)
+      setSelectedProductId('')
+      setSign('')
+    } catch(err){
+      toast.error(err.response.data.message,{duration:1000})
+    }
+    setWaitToChangeCount(true)
+
+    
   }
+
   let { data } = useQuery("cart", getUserCart, {
     casheTime: 0,
     staleTime: 0,
@@ -132,6 +178,7 @@ export default function CartContextProvider({ children }) {
     getUserCart();
   }, []);
 
+  
   return (
     <CartContext.Provider
       value={{
@@ -149,6 +196,11 @@ export default function CartContextProvider({ children }) {
         updateProductCount,
         selectedProductId,
         setSelectedProductId,
+        waitToDelete,
+        waitToChangeCount,
+        sign,
+        waitToAdd,
+        productToAdd
       }}
     >
       {children}

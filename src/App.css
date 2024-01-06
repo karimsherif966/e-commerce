@@ -41,6 +41,7 @@
 
 body{
     font-family: var(--font-family) !important;
+    overflow-x: hidden;
 }
 .rating-color
 {
@@ -111,7 +112,7 @@ i:hover{
   font-size: smaller !important;
 }
 footer{
-  background-color: #F8F9FA !important;
+  background-color: var(--light-color) !important;
 }
 .w-80{
   width: 80% !important;
@@ -130,6 +131,14 @@ footer{
 }
 .fa-cart-shopping:hover{
   color: gray !important;
+}
+.num-of-carts{
+  border-radius: 100%;
+  font-size: 1rem;
+  position: relative;
+  bottom: 15px;
+  right: 10px;
+  
 }
 
 
@@ -174,6 +183,70 @@ footer{
 .forgot-btn :hover{
   background-color: darkgray!important;
 }
+
+.contact-icons{
+  border: solid 1px;
+  border-radius: 100%;
+  padding: 13px;
+  transition: 0.5s ease-in-out;
+}
+.contact-icons:hover{
+  color: gray !important;
+}
+.line{
+  width: 90%;
+  height: 1px;
+  background-color: black;
+  margin-top: 5%;
+}
+.no-product-found{
+  margin-top: 10% !important;
+  margin-bottom: 15% !important;
+}
+.vh-50{
+  height: 50vh;
+}
+
+.up-row{
+  position: fixed;
+  top: 90%;
+  left:95%;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+
+.fade-out-exit{
+opacity: 1;
+position: relative;
+left: 0;
+}
+
+.fade-out-exit-active{
+  opacity: 0;
+  left: 100%;
+  transition: 2000ms all ;
+}
+.fade-out-exit-done{
+  opacity: 0;
+}
+.fade-out-enter{
+opacity: 1;
+position: relative;
+left: 0;
+}
+
+.fade-out-enter-active{
+  opacity: 0;
+  left: 100%;
+  transition: 2000ms all ;
+}
+.fade-out-enter-done{
+  opacity: 0;
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

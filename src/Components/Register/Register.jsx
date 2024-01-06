@@ -3,6 +3,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
 export default function Register() {
 
@@ -51,6 +52,11 @@ export default function Register() {
 
   return (
     <>
+    <Helmet>
+      <title>
+        Register
+      </title>
+    </Helmet>
     <div className='my-5'>
     
     <div className='w-75 m-auto'>

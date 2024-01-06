@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import LoadingScreen from "../Loadingscreen/LoadingScreen";
 import swal from "sweetalert";
-
+import { Helmet } from "react-helmet";
 export default function Brands() {
   let [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -47,6 +47,9 @@ export default function Brands() {
 
   return (
     <>
+      <Helmet>
+          <title>Brands</title>
+        </Helmet>
       {loading ? (
         <LoadingScreen />
       ) : (

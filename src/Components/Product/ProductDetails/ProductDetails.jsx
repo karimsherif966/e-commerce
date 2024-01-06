@@ -67,7 +67,7 @@ export default function ProductDetails() {
             <p>{productDetails?.description}</p>
             <p className='fw-bold fs-6'><span >Price:</span> {productDetails?.price} </p>
             <p><div className='fas fa-star text-warning'></div> {productDetails?.ratingsAverage} </p>
-            {id== selectedProductId ? <button disabled className="btn bg-main text-white w-100 mt-3  "><div className="fas fa-spinner fa-spin"></div></button>:   <button
+            {id=== selectedProductId ? <button disabled className="btn bg-main text-white w-100 mt-3  "><div className="fas fa-spinner fa-spin"></div></button>:   <button
         className="btn bg-main text-white w-100 mt-3 hover-bright"
         onClick={() => {
           addProductToCart(id);

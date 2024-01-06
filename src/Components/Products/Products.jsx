@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import Product from '../Product/Product'
 import LoadingScreen from '../Loadingscreen/LoadingScreen'
+import { Helmet } from 'react-helmet'
 
 export default function Products() {
 
@@ -20,7 +21,7 @@ export default function Products() {
   })
   let[loading,setLoading]= useState(false)
   useEffect(()=>{
-    if(isLoading==true){
+    if(isLoading===true){
         setLoading(true)
       } else{
         setLoading(false)
@@ -41,6 +42,9 @@ export default function Products() {
 
 
   return (<>
+    <Helmet>
+          <title>Products</title>
+        </Helmet>
     {!loading?  
     
      <div>
@@ -49,7 +53,7 @@ export default function Products() {
       </div>
       
      <div className='row pt-5'>
-     {searchBar == ''? 
+     {searchBar === ''? 
      data?.data.data.map((product)=>
       <Product key={product.id} product={product}/>) : 
       

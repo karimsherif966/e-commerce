@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { AuthContext } from '../../Contexts/AuthContext'
+import { Helmet } from 'react-helmet'
 
 export default function Login() {
 
@@ -31,7 +32,7 @@ export default function Login() {
    let validationSchema = Yup.object(
     {
       email: Yup.string().required("Email is required").matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'Invalid email address'),
-      password: Yup.string().required("Password is required").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/i,'Password must have lowercase letter,uppercase letter,number,special character and with min. length of 8 characters'),
+      password: Yup.string().required("Password is required"),
     }
   )
 
@@ -47,7 +48,13 @@ export default function Login() {
   })
 
   return (
+   
     <>
+     <Helmet>
+      <title>
+        Login
+      </title>
+    </Helmet>
     <div className='my-5'>
     
     <div className='w-75 m-auto'>
@@ -56,7 +63,7 @@ export default function Login() {
 
     
 
-      <label htmlFor='email' classemail='mb-1'>Email :</label>
+      <label htmlFor='email' className='mb-1'>Email :</label>
       <input onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.email}  className='form-control mb-3' type='email' name='email' id='email'/>
       {formik.errors.email && formik.touched.email ? 
        <div className='alert alert-danger'>

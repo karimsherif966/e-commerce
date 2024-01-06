@@ -4,25 +4,47 @@ import { useQuery } from "react-query";
 import Product from "../Product/Product";
 import LoadingScreen from "../Loadingscreen/LoadingScreen";
 import MainSlider from "./MainSlider/MainSlider";
+import { WishListContext } from "../../Contexts/WishListContextProvider";
+import { AuthContext } from "../../Contexts/AuthContext";
+import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 export default function Products() {
   let [searchBar, setSearchBar] = useState("");
+  let {getWishlist} = useContext(WishListContext)
+  let {isUserLoggedIn} = useContext (AuthContext)
+
+
+  
+
+  
   function getProducts() {
-    return axios.get("https://ecommerce.routemisr.com/api/v1/products");
+    try {
+      
+      return axios.get("https://ecommerce.routemisr.com/api/v1/products");
+     } catch (err){
+      toast.error("there is problem in the server , Try again ! ")
+     }
   }
 
   let { data, isLoading } = useQuery("products", getProducts, {
-    cacheTime: 10,
-    staleTime: 10,
+    cacheTime: 10000,
+    staleTime: 10000,
   });
   let [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [])
+  
+  useEffect(()=>{
+    if (isUserLoggedIn){getWishlist()}
+  })
+
+  
 
   useEffect(() => {
-    if (isLoading == true) {
+    if (isLoading === true) {
       setLoading(true);
     } else {
       setLoading(false);
@@ -34,6 +56,9 @@ export default function Products() {
 
   return (
     <>
+        <Helmet>
+          <title>Home</title>
+        </Helmet>
       {!loading ? (
         <div>
           <MainSlider />
@@ -47,13 +72,9 @@ export default function Products() {
           </div>
 
           <div className="row pt-5">
-            {searchBar == ""?
+            {searchBar === ""?
                data?.data.data.map((product) => (
-                
-
                   <Product key={product.id} product={product} />
-                  
-                  
                 )
                 
                 

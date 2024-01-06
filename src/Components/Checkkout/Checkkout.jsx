@@ -4,6 +4,8 @@ import * as Yup from 'yup'
 import { useState } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+import toast from 'react-hot-toast'
 
 export default function Checkkout() {
   let{id} = useParams()
@@ -13,6 +15,7 @@ export default function Checkkout() {
   }
 
   async function fetchCheckout(shippingAddress){
+   try{
     let res = await axios.post(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${id}?url=http://localhost:3000`,{
       
     shippingAddress : shippingAddress
@@ -24,7 +27,11 @@ export default function Checkkout() {
     })
 
     window.location.href= res.data.session.url;
-    console.log(res)
+   }
+    
+    catch(err){
+      toast.error(err.response.data.message,{duration:1000})
+     }
   }
 
 
@@ -51,6 +58,11 @@ export default function Checkkout() {
     
       return (
         <>
+        <Helmet>
+          <title>
+            Check Out
+          </title>
+        </Helmet>
         <div className='my-5'>
         
         <div className='w-75 m-auto'>
@@ -64,7 +76,7 @@ export default function Checkkout() {
             <p>{formik.errors.details}</p>
           </div> : null}
     
-          <label htmlFor='city' classemail='mb-1'>City:</label>
+          <label htmlFor='city' className='mb-1'>City:</label>
           <input onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.city}  className='form-control mb-3' type='text' name='city' id='city'/>
           {formik.errors.city && formik.touched.city ? 
            <div className='alert alert-danger'>

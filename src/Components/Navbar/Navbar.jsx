@@ -20,14 +20,14 @@ export default function Navbar() {
         
     <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav me-auto mb-2 mb-lg-0 fw-bolder">
-       {isUserLoggedIn? <ul className='navbar-nav'>
+        <ul className='navbar-nav'>
        <li className="nav-item ">
           <Link className="nav-a active nav-link text-grey black-hover" aria-current="page" to={"/home"}>Home</Link>
         </li>
       
-       <li className="nav-item ">
+       {isUserLoggedIn ? <li className="nav-item ">
           <Link className="nav-a active nav-link text-grey black-hover" aria-current="page" to={"/wishlist"}>Wishlist</Link>
-        </li>
+        </li> : null}
         <li className="nav-item ">
           <Link className="nav-a active nav-link text-grey black-hover" aria-current="page" to={"/products"}>Products</Link>
         </li>
@@ -37,23 +37,19 @@ export default function Navbar() {
         <li className="nav-item ">
           <Link className="nav-a active nav-link text-grey black-hover" aria-current="page" to={"/brands"}>Brands</Link>
         </li>
-       </ul> : null}
+       </ul> 
        
       </ul>
       <div className='d-flex gap-1 navbar-nav fw-bolder'>
-        <div className='d-flex gap-3 mt-1 me-1'>
-        <a className='cursor-pointer ' href='https://www.facebook.com/' target='_blank' rel="noopener"> <i class="fa-brands fa-facebook pt-3 text-black  "></i> </a>
-        <a className='cursor-pointer' href='https://twitter.com/' target='_blank' rel="noopener"> <i class="fa-brands fa-twitter pt-3 text-black"></i> </a>
-        <a className='cursor-pointer' href='https://www.linkedin.com/' target='_blank' rel="noopener"> <i class="fa-brands fa-linkedin pt-3 text-black"></i> </a>
-        <a className='cursor-pointer' href='https://www.youtube.com/' target='_blank' rel="noopener"> <i class="fa-brands fa-youtube pt-3 text-black"></i> </a>
-        <a className='cursor-pointer' href='https://www.instagram.com/' target='_blank' rel="noopener"> <i class="fa-brands fa-instagram pt-3 text-black"></i> </a>
+       {isUserLoggedIn?  <div className='d-flex gap-3 mt-1 me-1'>
+        
         <li className="nav-item ">
-          <Link className="nav-a active nav-link  fa-solid fa-cart-shopping pt-2 fs-3" aria-current="page" to={"/cart"}>{numOfCarts}</Link>
+          <Link className="nav-a active nav-link  fa-solid fa-cart-shopping pt-2 fs-3" aria-current="page" to={"/cart"}><span className='num-of-carts p-2 text-white bg-main'>{numOfCarts}</span></Link>
         </li>
-        </div>
+        </div> : ''}
     
          {isUserLoggedIn?  <div className="nav-item ">
-          <Link className="nav-a active nav-link text-grey black-hover fs-7 pt-3" aria-current="page" to={"/login"} onClick={()=>{setIsUserLoggedin(false); localStorage.removeItem('token')}}>Logout</Link>
+          <Link className="nav-a active nav-link text-grey black-hover fs-6 pt-3" aria-current="page" to={"/login"} onClick={()=>{setIsUserLoggedin(false); localStorage.removeItem('token')}}>Logout</Link>
         </div> : <div className='d-flex  gap-1'>
          <div className="nav-item ">
           <Link className="nav-a active nav-link text-grey black-hover fs-7 " aria-current="page" to={"/register"}>Register</Link>

@@ -1,29 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+  import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../Contexts/CartContextProvider";
 import { useContext } from "react";
 import { WishListContext } from "../../Contexts/WishListContextProvider";
+import { AuthContext } from "../../Contexts/AuthContext";
 
 export default function Product({ product }) {
   let [hover, setHover] = useState(false);
   let { addProductToCart,selectedProductId} = useContext(CartContext);
-  let { getWishlist,checkWishlist, wishListIdArr} = useContext(WishListContext)
-  
+  let { wishListIdArr,selectedProduct, waitToDelete, addToWishlist, deleteFromWishlist} = useContext(WishListContext)
+  let {isUserLoggedIn} = useContext (AuthContext)
+  let [color,setColor] = useState('')
  
   
 
-  useEffect(()=>{
-    getWishlist()
-  },[])
-
- 
   
-
-
- 
-  
-
 
   function addHover() {
     setHover(true);
@@ -32,7 +23,6 @@ export default function Product({ product }) {
     setHover(false);
   }
 
-  let navigate = useNavigate();
   return (
     <div className="col-md-3 cursor-pointer" key={product.id}>
       <div className="product overflow-hidden p-4">
@@ -41,23 +31,26 @@ export default function Product({ product }) {
             className="d-block"
             onMouseEnter={addHover}
             onMouseLeave={removeHover}
-          >
-            {wishListIdArr.includes(product.id)  ? <div
-                className="fa-solid fa-heart fs-1"
-                style={{ color: "red" }}
-                onClick={() => {getWishlist();checkWishlist(product.id)}}
-              ></div> : 
-              !hover ? (
-                <div className="fa-regular fa-heart fs-1 "></div>
-              ) : (
-                <div
-                  className="fa-solid fa-heart fs-1"
-                  style={{ color: "red" }}
-                  onClick={() => {getWishlist();checkWishlist(product.id)}}
-                ></div>
-              )}  
-              
-              
+          > 
+          {waitToDelete && product.id==selectedProduct ? <div>
+                <i className="fas fa-spin fa-spinner text-danger fs-3" />
+              </div> : 
+               color==='red' && isUserLoggedIn || wishListIdArr.includes(product.id) && isUserLoggedIn && color!='white' ? <div
+            className="fa-solid fa-heart fs-1"
+            style={{ color: "red" }}
+            onClick={() => {deleteFromWishlist(product.id);setColor('white')}}
+          ></div> : 
+          !hover ? 
+            <div className="fa-regular fa-heart fs-1 "></div>
+          : 
+          
+            <div
+              className="fa-solid fa-heart fs-1"
+              style={{ color: "red" }}
+              onClick={() => {addToWishlist (product.id);setColor('red')}}
+            ></div> 
+           
+          }
            
           </div>
         </div>
@@ -78,7 +71,7 @@ export default function Product({ product }) {
             </div>
           </div>
         </Link>
-        {product.id == selectedProductId ? <button disabled className="btn-dis btn bg-main text-white w-100 mt-3  "><div className="fas fa-spinner fa-spin"></div></button>:   <button
+        {product.id === selectedProductId  ? <button disabled className="btn-dis btn bg-main text-white w-100 mt-3  "><div className="fas fa-spinner fa-spin"></div></button>:   <button
         className="btn bg-main text-white w-100 mt-3 hover-bright"
         onClick={() => {
           addProductToCart(product.id);

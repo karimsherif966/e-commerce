@@ -5,11 +5,11 @@ import AuthContextProvider from "../../Contexts/AuthContext";
 import { Offline } from "react-detect-offline";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import CartContextProvider from "../../Contexts/CartContextProvider";
 import WishListContextProvider from "../../Contexts/WishListContextProvider";
 import ForgetPasswordProvider from "../../Contexts/ForgetPasswordProvider/ForgetPasswordProvider";
-
+import ScrollToTop from "react-scroll-to-top";
+import { Helmet } from "react-helmet";
 export default function Layout() {
   let queryClient = new QueryClient();
 
@@ -20,14 +20,16 @@ export default function Layout() {
           <CartContextProvider>
             <WishListContextProvider>
               <ForgetPasswordProvider>
+         
             <Navbar />
-            <div className="container pt-5 mt-5">
+            <div className="container pt-5 my-5 ">
               <Outlet />
+              <ScrollToTop className="bg-main"/>
             </div>
             <Footer />
             <div>
               <Offline>
-                <div className="offline-toast">You are Offline(surprise)</div>
+                <div className="offline-toast">You are Offline</div>
               </Offline>
             </div>
             <Toaster />
@@ -35,7 +37,6 @@ export default function Layout() {
             </WishListContextProvider>
           </CartContextProvider>
         </AuthContextProvider>
-        <ReactQueryDevtools />
       </QueryClientProvider>
     </>
   );

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import LoadingScreen from '../Loadingscreen/LoadingScreen'
 import { useState } from 'react'
+import { Helmet } from 'react-helmet'
 
 export default function Categories() {
    
@@ -38,6 +39,9 @@ export default function Categories() {
   
 
   return (<>
+    <Helmet>
+          <title>Categories</title>
+        </Helmet>
   
   {!loading ? (
   <div className='row pt-5'>
